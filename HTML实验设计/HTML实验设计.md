@@ -1,0 +1,48 @@
+## Basic
+### 一个包含所有HTML5 tags的网页
+### CSS的三种引用方式
+
+### 位置距离实验
+
+```html=1
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>测试网页元素的位置和距离</title>
+</head>
+<body>
+    <div id="d1">
+        2293.ml <br>
+        纯情部落 <br>
+    </div>
+    <div id="d2">
+        两行汉字 <br>
+        风驰电掣 <br>
+    </div>
+    <div id="d3">
+        <p>浪沫迩来</p>
+        <p>星沙梦泪</p>  
+    </div>
+    <div id="d4">
+        <p>moonriver</p>
+        <p>flint</p>  
+    </div>
+    <script>
+    $=function(id){return document.querySelector(id)}
+    
+    prompt('div#d1 .clientHeight is', $('div#d1').clientHeight);//37
+    $('div#d1').offsetHeight;//37
+    $('div#d2').clientHeight;//38
+    $('div#d2').offsetHeight;//38
+    $('div#d3').clientHeight;//54
+    $('div#d3').offsetHeight;//54
+    alert($('div#d3').offsetTop - $('div#d2').offsetTop);//chrome:54 firefox:58
+   
+    result = confirm('div#d4 .offsetHeight is '+$('div#d4').offsetHeight);//52
+    </script>
+</body>
+</html>
+```
