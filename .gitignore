@@ -59,3 +59,7 @@ typings/
 
 # next.js build output
 .next
+/bin/
+/.metadata/
+/Java编程高手速成/nbproject/private/
+/Java编程高手速成/build/

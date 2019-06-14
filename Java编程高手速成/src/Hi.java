@@ -1,6 +1,6 @@
 public class Hi {
     public static void main(String[] args) {
         // Prints some string to the terminal window.
-        System.out.println("Hello, World£¡ÄãºÃ£¬ÊÀ½ç£¡");
+        System.out.println("Hello, Worldï¼ä½ å¥½ï¼Œä¸–ç•Œï¼");
     }
 }
