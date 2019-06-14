@@ -5,7 +5,7 @@ Cody Luo @2019 summer
 
 ## 基础
 ### JDK的安装与切换
-JDK(Java Development Kit)，Java开发包是Java平台的标准实现，包括标准版(Standard Edition),企业版(Enterprise Edition)还有微型版(Micro Edition)，现在由2009年4月收购SUN公司的Oracle公司负责升级与发布。Java是跨平台的编程语言，适用的操作系统包括Solaris, Linux, macOS, Windows等等。
+JDK(Java Development Kit)，Java开发包是Java平台的标准实现，包括标准版(Standard Edition),企业版(Enterprise Edition)和微型版(Micro Edition)，现在由Oracle公司负责升级与发布。2009年4月Oracle公司收购SUN公司。Java是跨平台的编程语言，适用的操作系统包括Solaris, Linux, macOS, Windows等等。
 
 安装JDK有两种选择：
 - Oracle JDK, https://www.oracle.com/technetwork/java/javase/downloads/index.html , 目前的版本是12
@@ -64,9 +64,13 @@ Java HotSpot(TM) 64-Bit Server VM (build 12.0.1+12, mixed mode, sharing)
 $ su root
 $ export JAVA_HOME=/path/to/java
 $ export PATH = /path/to/java:$PATH
-env
-java -version
+$ env
+$ java -version
 ```
+
+为了点燃你对Java的热情，建议你现在翻看本书的
+- 
+-
 
 ### Java语言的特征
 Java宣传的口号是
@@ -123,8 +127,6 @@ block comments 块注释
 ### 类修饰词的作用域
 
 ### jshell
-
-## 数学与BigInteger
 
 ## Swing
 JFC(Java Foundation Classes)是Java基础类的简称，它概括了使用Swing构建GUI界面的各个方面，主要包括：
@@ -256,6 +258,248 @@ $ java JTreeDemo1
 ![](images/ml2293/swing/JTreeDemo1.png)
 
 ## 网络
+### 端口扫描 PortScanner
+socket连接一个地址端口时，若目标端口未开放，则会抛出一个java.net.SocketTimeoutException。其中的1000表示连接超时时长设为1秒。利用这个原理就可以设计出下面这个极简单的端口扫描程序。
+
+source: PortScanner.java
+```
+package ml2293.network;
+import java.net.*;
+public class PortScanner {
+    public static void main(String[] args) {
+        for (int port = 1; port <= 9999; port++) {
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress("202.38.64.3", port), 1000);
+                System.out.println(port + " is open");
+            } catch (Exception ex) {
+            }
+        }
+    }
+}
+```
+
+运行结果：
+<pre>
+$ java ml2293.network.PortScanner
+23 is open
+80 is open
+443 is open
+</pre>
+
+思考与练习：
+1. 设计一个Swing界面的端口扫描程序，放到云虚拟机中日夜运行。其中有两个列表JList hosts; JList ports; 
+
+
+### SimpleHttpServer
+这个简单的HttpServer使用了Sun官方制定的package com.sun.net.httpserver，功能简单，且掩盖了HTTP协议的细节，但清晰的体现了一个请求上下文对应一个HttpHandler的web设计思想。
+
+source: SimpleSunHTTPServer.java
+```
+package ml2293.http;
+
+import java.io.*;
+import java.net.*;
+import com.sun.net.httpserver.*;
+ 
+public class SimpleSunHTTPServer {
+ 
+   public static void main(String[] args) throws Exception {
+      HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+      server.createContext("/hello", new HelloHandler());
+      server.setExecutor(null);
+      server.start();
+      System.out.println("Http服务正在运行监听端口8080" );
+      System.out.println("http://localhost:8080/hello" );
+   }
+ 
+   static class HelloHandler implements HttpHandler {
+      @Override
+      public void handle(HttpExchange t) throws IOException {
+         String response = "Hello from SimpleSunHTTPServer.....";
+         t.sendResponseHeaders(200, response.length());
+         OutputStream os = t.getResponseBody();
+         os.write(response.getBytes());
+         os.close();
+      }
+   }
+}
+```
+
+### 获取某台主机的IP地址
+source: FindIPAddress.java
+```
+package ml2293.network;
+import java.net.*;
+public class FindIPAddress {
+    public static void main(String[] args) {
+        String hostname = "www.google.com";
+        try {
+            InetAddress ipaddress = InetAddress.getByName(hostname);
+            System.out.println("IP address: " + ipaddress.getHostAddress());
+        } catch (UnknownHostException e) {
+            System.out.println("UnknownHostException when try to find address for: " + hostname);
+        }
+    }
+}
+```
+
+运行结果：
+<pre>
+$ java FindIPAddress
+IP address: 69.171.242.11
+</pre>
+
+### 获取主机的所有IP地址
+source: GetAllIpAddresses.java
+```
+package ml2293.network;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+ 
+public class GetAllIpAddresses {
+   public static void main(String a[]){
+      try {
+         InetAddress[] myHost = InetAddress.getAllByName("www.baidu.com");
+         for(InetAddress host:myHost){
+            System.out.println(host.getHostAddress());
+         }
+      } catch (UnknownHostException ex) {
+         ex.printStackTrace();
+      }
+   }
+}
+```
+
+运行结果：
+<pre>
+$ java GetAllIpAddresses
+183.232.231.172
+183.232.231.174
+</pre>
+
+### 获取MAC地址
+source: MacAddress.java
+```
+package ml2293.network;
+
+import java.net.*;
+
+public class MacAddress {
+
+    public static void main(String[] args) {
+
+        InetAddress ip;
+        try {
+            ip = InetAddress.getLocalHost();
+            System.out.println("IP address : " + ip.getHostAddress());
+            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            byte[] mac = network.getHardwareAddress();
+            System.out.print("MAC address : ");
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < mac.length; i++) {
+                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+            }
+            System.out.println(sb.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
+
+运行结果：
+<pre>
+$ java MacAddress
+IP address : 192.168.0.102
+MAC address : 00-26-15-16-C3-24
+</pre>
+
+### Socket编程构建HttpServer
+
+
+## 数学与BigInteger
+
+### 梅森质数与Lucas-Lehmer测试
+首先，梅森数(Mersenne number) M=2^p-1 是质数，则p必须是质数；当p是一个质数，M=2^p-1 的因子数q总是形如 q=2*k*p+1 ， 并且 q%8=±1
+
+Lucas-Lehmer Test: 对于任意奇质数p， 梅森数 M=2^p-1 是质数当且仅当s[p-2] % M==0，这里 s[n]:=(s[n-1])^2 - 2, s[0]=4
+
+source: MersenneNumber.java
+```
+package ml2293.math;
+
+import java.math.BigInteger;
+
+public class MersenneNumber {
+
+    public static boolean isPrime(int p) {
+        if (p == 2) {
+            return true;
+        } else if (p <= 1 || p % 2 == 0) {
+            return false;
+        } else {
+            int to = (int) Math.sqrt(p);
+            for (int i = 3; i <= to; i += 2) {
+                if (p % i == 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    public static boolean isMersennePrime(int p) {
+        if (p == 2) {
+            return true;
+        } else {
+            BigInteger m_p = BigInteger.ONE.shiftLeft(p).subtract(BigInteger.ONE);
+            BigInteger s = BigInteger.valueOf(4);
+            for (int i = 3; i <= p; i++) {
+                s = s.multiply(s).subtract(BigInteger.valueOf(2)).mod(m_p);
+            }
+            return s.equals(BigInteger.ZERO);
+        }
+    }
+
+    public static void main(String[] args) {       
+        if (args.length > 0) {
+            int p = Integer.parseInt(args[0]);
+            if (isPrime(p) && isMersennePrime(p)) {
+                System.out.print(" M" + p + " is prime!");
+            } else {
+                System.out.print(" 2^" + p + "-1 is composite.");
+            }
+        } else {
+            int upb = 5000;
+            System.out.print(" M[2.." + upb + "] 中找到的梅森质数有:\nM2 ");
+            for (int p = 3; p <= upb; p += 2) {
+                if (isPrime(p) && isMersennePrime(p)) {
+                    System.out.print(" M" + p);
+                }
+            }
+        }
+    }
+}
+```
+
+运行结果：
+<pre>
+NetBeans中按下Shift+F6运行文件MersenneNumber.java，输出：
+
+ M[2..5000] 中找到的梅森质数有:
+M2  M3 M5 M7 M13 M17 M19 M31 M61 M89 M107 M127 M521 M607 M1279 M2203 M2281 M3217 M4253 M4423
+BUILD SUCCESSFUL (total time: 1 minute 27 seconds)
+
+$ java MersenneNumber 
+</pre>
+
+## Java中最常见的类System
+### System.currentTimeMillis()
+
 
 ## 附录
 ### 参考资料
