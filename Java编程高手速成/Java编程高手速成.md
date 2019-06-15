@@ -120,13 +120,145 @@ block comments 块注释
 
 ### 数据类型
 
+共有8种原生类型在Java语言中。另外，void表示空缺，或表示函数无返回值，不在8种原生类型之列。null表示某个变量为空值。
+
+|包装器类型|数据类型|大小|描述|缺省值|数值样例|
+|--- |--- |--- |--- |--- |--- |
+| Byte |byte|1 byte|  -128 ~ 127 byte[]类型数组经常用于存放内存数据 | 0 | 20, 0xFF, 0b10110101 |
+| Short |short|2 bytes| -32,768 ~ 32,767| 0 | 32767 |
+| Integer |int|4 bytes| -2,147,483,648 ~ 2,147,483,647| 0 | -1 |
+| Long |long|8 bytes| -9,223,372,036,854,775,808 ~ 9,223,372,036,854,775,807| 0L | 234_1234L |
+| Float |float|4 bytes| 1.4E-45 ~ 3.4E38| 0.0f | 2.4e+12 |
+| Double |double|8 bytes|4.9E-324 ~ 1.7976931348623157E308 有效存储15个10进制数字| 0.0d | -768.25D , 1.2e+38d, Double.NaN, Double.POSITIVE_INFINITY |
+| Boolean |boolean|1 bit| true 或 false | false | true, false |
+| Character |char|2 bytes| 单个ASCII字符 | '\u0000' | 'A' , 65 , '\n'|
+| Void | void | 0 | 空缺 |  | |
+
+
 ### 流程控制
 
 ### 运算符优先级
 
+<pre>
+    优先级   操作符   含义        关联性  用法 
+    -------------------------------------------------------
+    1        [ ]      数组下标      左    array_name[expr] 
+             .        成员选择      左    object.member 
+             ( )      方法参数      左    method_name(expr_list) 
+             ( )      实例构造      左    class_name(expr_list) 
+             ++       后缀自增      左    lvalue++ 
+             --       后缀自减      左    lvalue-- 
+     
+    2        ++       前缀自增      右    ++rvalue 
+             --       前缀自减      右    --lvalue 
+             ~        按位取反      右    ~expr 
+             !        逻辑非        右    !expr 
+             +        一元加        右    +expr 
+             -        一元减        右    -expr 
+     
+    3        ( )      强制转换      右    (type)expr 
+             new      对象实例化    右    new type() 
+                                          new type(expr_list) 
+                                          new type[expr] 
+     
+    4        *        乘            左    expr * expr 
+             /        除            左    expr / expr 
+             %        求余          左    expr % expr 
+     
+    5        +        加            左    expr + expr 
+             -        减            左    expr - expr 
+             +        字符串连接    左    strExpr + strExpr 
+     
+    6        >>       有符号右移    左    expr >> distance 
+             >>>      无符号右移    左    expr >>> distance 
+     
+    7        <        小于          左    expr < expr 
+             <=       小于等于      左    expr <= expr 
+             >        大于          左    expr > expr 
+             >=       大于等于      左    expr >= expr 
+          instanceof  类型比较      左    ref instanceof refType 
+             ==       等于          左    expr == expr 
+             !=       不等于        左    expr != expr 
+     
+    8        &        整数按位与    左    integralExpr & integralExpr 
+             &        布尔与        左    booleanExpr & booleanExpr 
+     
+    9        ^        整数按位异或  左    integralExpr ^ integralExpr 
+             ^        布尔异或      左    booleanExpr ^ booleanExpr 
+     
+    10       |        整数按位或    左    integralExpr | integralExpr 
+             |        布尔或        左    booleanExpr | booleanExpr 
+     
+    11       &&       逻辑与        左    booleanExpr && booleanExpr 
+     
+    12       ||       逻辑或        左    booleanExpr || booleanExpr 
+     
+    13       ? :      条件运算      右    booleanExpr ? expr : expr 
+     
+    14       =        赋值          右    lvalue = expr 
+             *=       乘赋值        右    lvalue *= expr 
+             /=       除赋值        右    lvalue /= expr 
+             %=       模赋值        右    lvalue %= expr 
+             +=       加赋值        右    lvalue += expr 
+             +=    字符串连接赋值   右    lvalue += expr 
+             -=       减赋值        右    lvalue -= expr 
+             <<=      左移赋值      右    lvalue <<= expr 
+             >>=   有符号右移赋值   右    lvalue >>= expr 
+             >>>=  无符号右移赋值   右    lvalue >>>= expr 
+             &=    整数按位与赋值   右    lvalue &= expr 
+             &=       布尔与赋值    右    lvalue &= expr 
+             |=    整数按位或赋值   右    lvalue |= expr 
+             |=       布尔或赋值    右    lvalue |= expr 
+             ^=   整数按位异或赋值  右    lvalue ^= expr 
+             ^=     布尔异或赋值    右    lvalue ^= expr 
+</pre>
+
+运算符不但有优先级，还有关联性。
+上表中关联性为“左”表示该表达式从左边开始进行运算；关联性为“右”表示该表达式从右边开始进行运算
+
 ### 类修饰词的作用域
 
 ### jshell
+
+## String
+### 计算某年某月某日是星期几
+ source: DayOfWeek .java
+ ```
+ package ml2293.basic;
+
+/*
+ *  读入年月日，输出星期几
+ *  月份m=1 表示1月 January
+ *  输出 0 表示星期天 Sunday， 1 表示星期一 Monday， 等等.
+ *  计算公式为:
+ *        y0 = y - (14 - m) / 12
+ *        x = y0 + y0/4 - y0/100 + y0/400
+ *        m0 = m + 12 * ((14 - m) / 12) - 2
+ *        dayOfWeek = (d + x + (31*m0)/12) mod 7
+ *
+ *  % java ml2293.basic.DayOfWeek 1949 10 1 
+ *  6                              // 星期六 Saturday
+ *
+ *  % java ml2293.basic.DayOfWeek 2000 1 2   #January 2, 2000
+ *  0                              // 星期天 Sunday
+ *
+ ******************************************************************************/
+public class DayOfWeek {
+
+    public static void main(String[] args) {
+        int y = Integer.parseInt(args[0]);
+        int m = Integer.parseInt(args[1]);
+        int d = Integer.parseInt(args[2]);
+
+        int y0 = y - (14 - m) / 12;
+        int x = y0 + y0 / 4 - y0 / 100 + y0 / 400;
+        int m0 = m + 12 * ((14 - m) / 12) - 2;
+        int d0 = (d + x + (31 * m0) / 12) % 7;
+
+        System.out.println(d0);
+    }
+}
+```
 
 ## Swing
 JFC(Java Foundation Classes)是Java基础类的简称，它概括了使用Swing构建GUI界面的各个方面，主要包括：
@@ -428,6 +560,8 @@ MAC address : 00-26-15-16-C3-24
 
 Lucas-Lehmer Test: 对于任意奇质数p， 梅森数 M=2^p-1 是质数当且仅当s[p-2] % M==0，这里 s[n]:=(s[n-1])^2 - 2, s[0]=4
 
+目前发现的最大的梅森质数是2^82,589,933-1
+
 source: MersenneNumber.java
 ```
 package ml2293.math;
@@ -494,11 +628,21 @@ NetBeans中按下Shift+F6运行文件MersenneNumber.java，输出：
 M2  M3 M5 M7 M13 M17 M19 M31 M61 M89 M107 M127 M521 M607 M1279 M2203 M2281 M3217 M4253 M4423
 BUILD SUCCESSFUL (total time: 1 minute 27 seconds)
 
-$ java MersenneNumber 
+$ java ml2293.math.MersenneNumber 44497
+ M44497 is prime!
 </pre>
+
 
 ## Java中最常见的类System
 ### System.currentTimeMillis()
+
+## 几个优秀的Java开源项目
+
+### ImageJ
+### H2 database
+### crawler4J
+### SparkJava
+### jEdit
 
 
 ## 附录
