@@ -69,8 +69,13 @@ $ java -version
 ```
 
 为了点燃你对Java的热情，建议你现在翻看本书的
+
 - 
 -
+
+### 下载或者翻看openjdk的源码库
+openjdk正在开发中的的源码库在 http://hg.openjdk.java.net/jdk/jdk/ 可以在线浏览，网页的左边导航中有 .bz2 .gz .zip 三种压缩文件可供下载，其中以bz2的压缩率最高。  
+http://hg.openjdk.java.net/jdk/jdk/archive/tip.tar.bz2
 
 ### Java语言的特征
 Java宣传的口号是
@@ -214,11 +219,28 @@ block comments 块注释
 </pre>
 
 运算符不但有优先级，还有关联性。
-上表中关联性为“左”表示该表达式从左边开始进行运算；关联性为“右”表示该表达式从右边开始进行运算
+上表中关联性为“左”表示该表达式从左边开始进行运算；关联性为“右”表示该表达式从右边开始进行运算。  
+下面几条左右等价的代码可以让你快速记忆Java运算符的优先级:
+<pre>
+a[0].toString()           (a[0]).toString()
+
+a += c|b+3>>4^0xF5 &1    a+= (c| (( ((b+3)>>4) ^0xF5) &1) )
+
+int i=0,j=10,n=i+++j;    int i=0,j=10,n=(i++)+j;  
+//运行后i:1,j:10,n:10  
+
+
+</pre>
+
 
 ### 类修饰词的作用域
 
 ### jshell
+
+### java.exe
+
+java -h
+ -splash:<图像路径>
 
 ## String
 ### 计算某年某月某日是星期几
@@ -259,6 +281,33 @@ public class DayOfWeek {
     }
 }
 ```
+
+## ava.util.function
+### Comsumer
+
+source: ComsumerDemo.java
+```
+package ml2293.basic;
+
+import java.util.function.Consumer;
+public class ComsumerDemo {
+    public static void main(String args[]) 
+    { 
+        // Consumer to display a number 
+        Consumer<Integer> display = a -> System.out.println(a);
+        Consumer<Integer> displaySquare = a -> System.out.println(a*a);
+        // invoke display using accept() 
+        display.accept(10);
+        //andThen 表示了依次调用的顺序
+        display.andThen(displaySquare).accept(9); 
+    }
+}
+```
+
+运行结果: $ java ComsumerDemo  
+10
+9
+81
 
 ## Swing
 JFC(Java Foundation Classes)是Java基础类的简称，它概括了使用Swing构建GUI界面的各个方面，主要包括：
@@ -647,6 +696,7 @@ $ java ml2293.math.MersenneNumber 44497
 
 ## 附录
 ### 参考资料
+- JDK 12 Documentation, https://docs.oracle.com/en/java/javase/12/index.html
 - The Java™ Tutorials, https://docs.oracle.com/javase/tutorial/
 - Introduction to Programming in Java, https://introcs.cs.princeton.edu/java/home/
 - Java Examples, https://www.javacodex.com/
