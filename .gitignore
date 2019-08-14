@@ -1,3 +1,6 @@
+#
+.idea/
+
 # Logs
 logs
 *.log
@@ -63,3 +66,7 @@ typings/
 /.metadata/
 /Java编程高手速成/nbproject/private/
 /Java编程高手速成/build/
+
+# python
+.pyc
+__pycache__/

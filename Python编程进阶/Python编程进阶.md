@@ -1,9 +1,18 @@
 # Python编程进阶
 @ 2018冬季 Cody Luo (罗江林 cody@ ustc.edu)
 
+### GUI: tkinter
+
+```python
+from tkinter import *
+Label(text='Spam').pack()
+mainloop()
+```
+
+https://docs.python.org/3/library/tkinter.html
 ### 使用*pickle*序列化对象
 pickle提供了一种对象序列化的机制，一个对象可以被表示为一个字节序列。 将序列化对象写入文件之后，可以从文件中读取出来，并且对它进行反序列化
- 
+
 - pickle.dump(obj, file, protocol=None, *, fix_imports=True)
 - pickle.dumps(obj, protocol=None, *, fix_imports=True)
 - pickle.load(file, *, fix_imports=True, encoding="ASCII", errors="strict")
@@ -26,16 +35,6 @@ with open('book.obj', 'rb') as f:
     data = pickle.load(f)
     print(data)
 ```
-
-### GUI: tkinter
-
-```python=
-from tkinter import *
-Label(text='Spam').pack()
-mainloop()
-```
-
-https://docs.python.org/3/library/tkinter.html
 
 ### urlopen
 
@@ -65,7 +64,12 @@ dr-xr-xr-x   20 0        0            4096 Jun 13  2010 pub
 '221 Goodbye.'
 ```
 
+
+
+@ 2019暑假 Cody Luo (罗江林 cody@ ustc.edu)
+
 ## Python精湛代码
+
 ### 简单web服务器, 以当前目录开始
 ```
  # Python 2
@@ -133,6 +137,47 @@ import sys,itertools;[sys.stdout.write('\n'.join('.' * i + 'Q' + '.' * (8-i-1) f
 
 `import antigravity` 将打开浏览器访问网址 https://xkcd.com/
 
+在IDLE(Python 3.7 64bit)中运行，然后学习 antigravity.py 的源码：
+
+```python
+>>> import antigravity
+>>> print(antigravity.__file__)
+D:\Python37\lib\antigravity.py
+```
+
+```python
+import webbrowser
+import hashlib
+
+webbrowser.open("https://xkcd.com/353/")
+
+def geohash(latitude, longitude, datedow):
+    '''Compute geohash() using the Munroe algorithm.
+
+    >>> geohash(37.421542, -122.085589, b'2005-05-26-10458.68')
+    37.857713 -122.544543
+
+    '''
+    # https://xkcd.com/426/
+    h = hashlib.md5(datedow).hexdigest()
+    p, q = [('%f' % float.fromhex('0.' + x)) for x in (h[:16], h[16:32])]
+    print('%d%s %d%s' % (latitude, p[1:], longitude, q[1:]))
+```
+学习编程的最好办法就是阅读运行源码，然后引发创想与实验……
+IDLE(Python 3.7 64bit) 菜单 `Help>Turtle Demo` 提供一个有趣的窗口程序样例，它的源码位于`D:\Python37\Lib\turtledemo\` turtledemo提供了一个编写Tkinter窗口应用的清晰框架，把它作为参考模板，我们完全可以轻松的编写自己的应用甚至游戏……
+
+```python
+from turtle import *
+#speed('fast')
+i=1000
+while i>0:
+    forward(200),left(75)
+    i-=1
+```
+<img src="F:\cloud\github\dev\Python编程进阶\images\turtuledemo_left75.png" width="200">
+
+https://docs.python.org/zh-cn/3/library/turtle.html#turtle.forward 详尽介绍了海龟绘图的各个函数与使用方法。这个页面示范了如何编写程序文档，它使用[Sphinx](http://sphinx.pocoo.org/)2.0.1 创建。
+
 ### 获取公网IP地址
 ```
 import socket; sock=socket.create_connection(('ns1.dnspod.net',6666)); print (sock.recv(16)); sock.close()
@@ -151,8 +196,13 @@ import random
 while 1:
     print(random.choice('╱ ╲'), end='')
 ```
+### 实现老虎机功能，多个字符中随机选择3个
+```
+import random;p=lambda:random.choice('7♪♫♣♠♦♥◄☼☽');[print('|'.join([p(),p(),p()]),end='\r') for i in range(8**5)]
 
-<img src="images/maze.png">
+# 可以利用random.sample()函数把上述代码简写为
+import random;[print('|'.join(random.sample('7♪♫♣♠♦♥◄☼☽',3)),end='\r')  for i in range(8**5)]
+```
 
 ## Python简明代码样例
 
@@ -204,3 +254,13 @@ print(z)
    # {'a': 1, 'b': 'boat', 'c': 3}
 ```
 ### itertools
+
+## 
+
+Jupyter SageMath pygame TensorFlow NLTK face_recoganition
+
+## 参考文档
+
+1. https://docs.python.org/zh-cn/3/library/turtle.html  Python3中文文档, turtle --- 海龟绘图
+2. https://docs.python.org/3/library/random.html   The Python Standard Library » Numeric and Mathematical Modules » random — Generate pseudo-random numbers
+2. https://python3-cookbook.readthedocs.io/zh_CN/latest/c03/p11_pick_things_at_random.html python3-cookbook » 第三章：数字日期和时间 » 3.11 随机选择
