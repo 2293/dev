@@ -1,0 +1,35 @@
+Table 1-2. Popular Python domains, tools, and extensions
+Domain
+Tools and extensions
+Systems programming: support for all common
+system-level tools
+Sockets, processes, threads, signals, pipes, RPC,
+directories, POSIX bindings...
+GUIs: a variety of portable GUI toolkits and
+builders
+Tkinter, wxPython, PyQt, PyGTK, Anygui, Swing,
+PythonCard, Dabo...
+Database interfaces: interfaces for both
+relational and object-oriented databases
+MySQL, Oracle, Sybase, PostgreSQL, SQLite,
+persistence, ZODB, DBM...
+Microsoft Windows tools: access to a variety of
+Windows-specific tools
+MFC wrappers, COM interfaces, ActiveX scripting,
+ASP, ODBC drivers, .NET...
+Internet tools: sockets, CGI, client tools, server
+tools, web frameworks, parsers, Apache
+support, Java integration
+Jython, XML, email, ElementTree, htmllib,
+telnetlib, urllib, Zope, CherryPy, Twisted,
+Webware, Django, mod_python, SSL...
+Distributed objects: SOAP web services, XML-
+RPC, CORBA, DCOM
+PySOAP, SOAPy, xmlrpclib, ILU, Fnorb, omniORB,
+PyWin32...
+Other popular tools: graphics, language,
+visualization, numerics, cryptography,
+integration, gaming, wikis...
+PIL, VPython, Blender, PyOpenGL, NLTK, YAPPS,
+VTK, NumPy, PyCrypto, SWIG, ctypes, PyGame,
+MoinMoin...

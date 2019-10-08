@@ -24,16 +24,22 @@ public class MersenneNumber {
         if (p == 2) {
             return true;
         } else {
-            BigInteger m_p = BigInteger.ONE.shiftLeft(p).subtract(BigInteger.ONE);
-            BigInteger s = BigInteger.valueOf(4);
+            BigInteger M = BigInteger.ONE.shiftLeft(p).subtract(BigInteger.ONE);
+            BigInteger s = BigInteger.valueOf(4),s2;
             for (int i = 3; i <= p; i++) {
-                s = s.multiply(s).subtract(BigInteger.valueOf(2)).mod(m_p);
+                s = s.multiply(s).subtract(BigInteger.valueOf(2)).mod(M);
+				System.out.print(i+" ");
+				/*s2=M.subtract(s);
+				System.out.println(s);System.out.println(s2);
+				if(1==s.compareTo(s2)) s=s2;
+				*/
             }
             return s.equals(BigInteger.ZERO);
         }
     }
 
-    public static void main(String[] args) {       
+    public static void main(String[] args) {   
+		//java ml2293/math/MersenneNumber.java 82589933
         if (args.length > 0) {
             int p = Integer.parseInt(args[0]);
             if (isPrime(p) && isMersennePrime(p)) {

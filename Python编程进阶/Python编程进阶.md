@@ -163,7 +163,7 @@ def geohash(latitude, longitude, datedow):
     p, q = [('%f' % float.fromhex('0.' + x)) for x in (h[:16], h[16:32])]
     print('%d%s %d%s' % (latitude, p[1:], longitude, q[1:]))
 ```
-学习编程的最好办法就是阅读运行源码，然后引发创想与实验……
+学习编程的最好办法就是阅读运行源码，引发创想与实验……
 IDLE(Python 3.7 64bit) 菜单 `Help>Turtle Demo` 提供一个有趣的窗口程序样例，它的源码位于`D:\Python37\Lib\turtledemo\` turtledemo提供了一个编写Tkinter窗口应用的清晰框架，把它作为参考模板，我们完全可以轻松的编写自己的应用甚至游戏……
 
 ```python
@@ -203,6 +203,37 @@ import random;p=lambda:random.choice('7♪♫♣♠♦♥◄☼☽');[print('|'.
 # 可以利用random.sample()函数把上述代码简写为
 import random;[print('|'.join(random.sample('7♪♫♣♠♦♥◄☼☽',3)),end='\r')  for i in range(8**5)]
 ```
+
+### 实现一个计算器 calc.py
+```
+while 1: print(eval(input('>')))
+```
+
+### 暴力破解zip压缩文件的密码
+使用 zipfile 库来解压文件只需3行
+```
+import zipfile
+zFile = zipfile.ZipFile("magic.zip")
+zFile.extractall(pwd=b"secret")
+```
+
+很自然的，我们可以使用一个密码字典程序, 尝试暴力破解zip文件
+```
+import zipfile
+zFile = zipfile.ZipFile("magic.zip")
+passFile = open('dictionary.txt',encoding="utf-8")
+
+for line in passFile.readlines():
+        password = line.strip('\n')
+        try:
+                zFile.extractall(path="./magic",pwd=password.encode('utf-8'))
+                print('Password : ', password)
+                exit(0)
+        except Exception as e:
+                print (e)
+```
+
+注意: zipfile会对AES-256加密算法失效，即使密码串正确，解压时总是出现异常Bad password for file......对于ZipCrypto加密算法的.zip工作良好。
 
 ## Python简明代码样例
 
@@ -254,6 +285,26 @@ print(z)
    # {'a': 1, 'b': 'boat', 'c': 3}
 ```
 ### itertools
+
+## Python标准库
+
+### Tk图形用户界面(GUI)
+
+在命令行中运行 `python -m tkinter`，会弹出一个Tk界面的窗口，这表明 [`tkinter`](https://docs.python.org/zh-cn/3/library/tkinter.html#module-tkinter) 包已经正确安装。
+
+```
+>>> import tkinter as tk
+>>> tk._test()
+>>> tk.Tcl().eval('info patchlevel')
+'8.6.9'
+>>> 
+```
+
+
+
+### cmd -- 支持面向行的命令解释器
+源代码: Lib/cmd.py
+class cmd.Cmd(completekey='tab', stdin=None, stdout=None)
 
 ## 
 
