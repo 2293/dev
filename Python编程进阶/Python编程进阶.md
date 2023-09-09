@@ -284,6 +284,13 @@ z={**x,**y}
 print(z)
    # {'a': 1, 'b': 'boat', 'c': 3}
 ```
+### 随机取样
+import random
+l=['peach','fig','lily','loquat']
+choose=random.choice(l)
+sample=random.sample(l,2)
+print(choose,sample)
+
 ### itertools
 
 ## Python标准库
